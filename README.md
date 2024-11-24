@@ -13,10 +13,8 @@ The **Drawing Classifier** is an interactive machine learning application that a
 - [Usage](#usage)
 - [File Structure](#file-structure)
 - [Technologies Used](#technologies-used)
-- [Screenshots](#screenshots)
 - [Future Enhancements](#future-enhancements)
 - [Contributing](#contributing)
-- [License](#license)
 
 ---
 
@@ -68,7 +66,7 @@ Follow these steps to set up and run the Drawing Classifier:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/drawing-classifier.git
+   git clone https://github.com/HusseienHs/AI-Custom-Drawings-Classifier.git
    cd drawing-classifier
    ```
 
@@ -187,12 +185,6 @@ We welcome contributions to improve this project! To contribute:
    git push origin feature/YourFeatureName
    ```
 5. Submit a pull request.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ---
 
