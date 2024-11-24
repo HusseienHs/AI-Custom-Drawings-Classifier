@@ -1,3 +1,29 @@
+"""
+Drawing Classifier Application
+
+This Python application enables users to create and classify drawings into custom-defined classes using machine learning models.
+It offers a graphical user interface (GUI) for drawing, training models, saving data, and predicting classifications for new drawings.
+Users can dynamically switch between multiple models, including Linear SVC, K-Nearest Neighbors, Logistic Regression, Decision Trees,
+Random Forests, and Naive Bayes.
+
+Key Features:
+- Draw on a canvas and classify sketches into three user-defined categories.
+- Save and load machine learning models for future use.
+- Train models on user-generated data.
+- Predict the class of new drawings.
+- Change the active machine learning model dynamically.
+
+Requirements:
+- Python 3.x
+- Tkinter for GUI
+- OpenCV for image processing
+- PIL (Pillow) for image handling
+- scikit-learn for machine learning
+
+Author: NeuralNine
+Version: Alpha v0.2
+"""
+
 import pickle
 import os.path
 
@@ -18,7 +44,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 class DrawingClassifier:
+    """
+       A class representing the Drawing Classifier application.
+       Provides methods for initializing the GUI, handling user inputs, managing drawings,
+       training and saving models, and classifying new sketches.
+       """
     def __init__(self):
+        """Initialize the application by setting up classes, counters, and GUI."""
         self.class1,self.class2,self.class3 = None,None,None
         self.class1_counter,self.class2_counter,self.class3_counter = None,None,None
         self.clf = None
@@ -34,7 +66,13 @@ class DrawingClassifier:
 
         self.classes_prompt()
         self.init_gui()
+
     def classes_prompt(self):
+        """
+              Prompt the user to provide project and class names.
+              If a saved project exists, load its data.
+              Otherwise, initialize new project directories and default class counters.
+        """
         msg = Tk()
         msg.withdraw()
 
@@ -70,6 +108,10 @@ class DrawingClassifier:
             os.chdir("..")
 
     def init_gui(self):
+        """
+               Initialize the graphical user interface, including the drawing canvas,
+               buttons for functionality, and event bindings.
+        """
         WIDTH = 500
         HEIGHT = 500
         WHITE = (255, 255, 255)
@@ -136,6 +178,12 @@ class DrawingClassifier:
         self.root.mainloop()
 
     def paint(self, event):
+        """
+               Handle the drawing action on the canvas.
+
+               Parameters:
+               - event: The Tkinter event object containing the cursor position.
+        """
         x1, y1 = (event.x - self.brush_width // 2), (event.y - self.brush_width // 2)
         x2, y2 = (event.x + self.brush_width // 2), (event.y + self.brush_width // 2)
 
@@ -146,6 +194,12 @@ class DrawingClassifier:
         self.draw.ellipse([x1, y1, x2, y2], fill="black")
 
     def save(self, class_num):
+        """
+                Save the current drawing to the specified class directory.
+
+                Parameters:
+                - class_num: The class number (1, 2, or 3) to which the drawing belongs.
+        """
         self.image1.save("temp.png")
         img = PIL.Image.open("temp.png")
         img.thumbnail((50, 50), Image.Resampling.LANCZOS)
@@ -161,6 +215,8 @@ class DrawingClassifier:
 
         self.clear()
     def brushplus(self):
+        """Increase the brush size."""
+
         self.brush_width += 1
 
     def brushminus(self):
@@ -172,6 +228,11 @@ class DrawingClassifier:
         self.draw.rectangle([0,0,1000,1000],fill ="white")
 
     def train_model(self):
+        """
+                Train the active machine learning model using the saved drawings for each class.
+                The drawings are converted to grayscale, flattened, and used as training data.
+
+        """
         img_list = np.array([])
         class_list = np.array([])
 
@@ -199,6 +260,10 @@ class DrawingClassifier:
         tkinter.messagebox.showinfo("NeuralNine Drawing Classifier", "Model successfully trained!", parent=self.root)
 
     def predict(self):
+        """
+               Predict the class of the current drawing using the trained model.
+               Displays the result in a popup message box.
+        """
         self.image1.save("temp.png")
         img = PIL.Image.open("temp.png")
         img.thumbnail((50, 50), Image.Resampling.LANCZOS)
@@ -215,6 +280,10 @@ class DrawingClassifier:
             tkinter.messagebox.showinfo("NeuralNine Drawing Classifier", f"The drawing is probably a {self.class3}", parent=self.root)
 
     def rotate_model(self):
+        """
+                Switch the active machine learning model to the next available option.
+                Updates the status label with the current model's name.
+        """
         if isinstance(self.clf, LinearSVC):
             self.clf = KNeighborsClassifier()
         elif isinstance(self.clf, KNeighborsClassifier):
@@ -250,6 +319,10 @@ class DrawingClassifier:
         tkinter.messagebox.showinfo("NeuralNine Drawing Classifier", "Project successfully saved!", parent=self.root)
 
     def on_closing(self):
+        """
+               Handle the application closing event.
+               Prompt the user to save their work before exiting.
+        """
         answer = tkinter.messagebox.askyesnocancel("Quit?", "Do you want to save your work?", parent=self.root)
         if answer is not None:
             if answer:
